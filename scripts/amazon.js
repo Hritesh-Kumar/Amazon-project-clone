@@ -61,8 +61,7 @@ products.forEach((product) => {
 document.querySelector('.js-products-grid')
   .innerHTML = productsHTML;
 
-
-//--------------------------------------------------//  
+ 
 
 //below function just manages the web page not the cart.
 function updateCartQuantity() {
@@ -77,8 +76,7 @@ function updateCartQuantity() {
 }
 
 
-//----------------------------------------------------//
-
+//addtocart button click functionality
 document.querySelectorAll('.js-add-to-cart')
   .forEach((button) => {
     button.addEventListener('click', () => {
