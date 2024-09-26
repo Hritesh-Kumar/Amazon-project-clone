@@ -14,13 +14,13 @@ import {deliveryOptions} from '../data/deliveryOptions.js'
 // const deliveryDate = today.add(7, 'days');
 // console.log(deliveryDate.format('dddd, MMMM D'));//check documentation if i forgot
 
+function renderOrderSummary() {
 
+  //Variable for storing generated HTML
+  let cartSummaryHTML = '';
 
-//Variable for storing generated HTML
-let cartSummaryHTML = '';
-
-//Accessing the data details from product.js using Id
-cart.forEach((cartItem) => {
+  //Accessing the data details from product.js using Id
+  cart.forEach((cartItem) => {
   const productId = cartItem.productId;
 
   let matchingProduct;
@@ -48,8 +48,8 @@ cart.forEach((cartItem) => {
     const dateString = deliveryDate.format(
       'dddd, MMMM D'
     );
-  
-  
+
+
   //Each loop adds to the cartSummaryHTML(Show Checkout)
   cartSummaryHTML += `
     <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
@@ -90,9 +90,9 @@ cart.forEach((cartItem) => {
       </div>
     </div>
   `;
-});
+  });
 
-function deliveryOptionsHTML(matchingProduct, cartItem) {
+  function deliveryOptionsHTML(matchingProduct, cartItem) {
   let html = '';
 
   deliveryOptions.forEach((deliveryOption) => {
@@ -109,7 +109,7 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
       ? 'FREE'
       : `$${formatCurrency(deliveryOption.priceCents)} -`;
 
-    const isChecked = deliveryOptions.id === cartItem.deliveryOptionsId
+    const isChecked = deliveryOption.id === cartItem.deliveryOptionsId
 
 
     html += `
@@ -132,15 +132,15 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
   });
 
   return html
-}
+  }
 
-//Adding the HTML into checkout.html
-document.querySelector('.js-order-summary')
+  //Adding the HTML into checkout.html
+  document.querySelector('.js-order-summary')
   .innerHTML = cartSummaryHTML;
 
 
-//delete link functionality
-document.querySelectorAll('.js-delete-link')
+  //delete link functionality
+  document.querySelectorAll('.js-delete-link')
   .forEach((link)=>{
     link.addEventListener('click', () => {
       const productId = link.dataset.productId;
@@ -149,13 +149,18 @@ document.querySelectorAll('.js-delete-link')
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.remove();
     });
-});
+  });
 
-document.querySelectorAll('.js-delivery-option')
+  document.querySelectorAll('.js-delivery-option')
   .forEach((element)=>{
     element.addEventListener('click', () => {
       //shorthand property names
       const {productId, deliveryOptionId} = element.dataset;
       updateDeliveryOption(productId, deliveryOptionId);
+      //recursive call
+      renderOrderSummary();
     });
   });
+}
+
+renderOrderSummary();
